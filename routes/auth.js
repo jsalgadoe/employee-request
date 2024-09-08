@@ -37,15 +37,6 @@ authRouter.post(
     check("password", "El password debe ser minimo de 6 caracteres").isLength({
       min: 6,
     }),
-    check("identification", "El identification debe ser minimo de 6 caracteres")
-      .isLength({
-        min: 6,
-      })
-      .withMessage("La identificación debe ser minima de 6 caracteres")
-      .isLength({
-        max: 10,
-      })
-      .withMessage("La identificacion debe ser maxima 10 caracteres"),
     validarCampos,
   ],
   AuthController.register

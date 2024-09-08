@@ -20,7 +20,16 @@ export class AuthController {
         });
       }
 
+      /** vallidar si esta activo */
+      if (!user.status) {
+        return res.status(400).json({
+          ok: false,
+          msg: "El usuario no este activo contacte con el administrador",
+        });
+      }
+
       const validPassword = bcrypt.compareSync(password, user.password);
+
       if (!validPassword) {
         return res.status(400).json({
           ok: false,
@@ -67,6 +76,7 @@ export class AuthController {
       user = await UserModel.registerUser({
         ...validDataRegister,
         is_admin: false,
+        status: false,
       });
 
       const token = await generarJwt(user.id, user.name, user.is_admin);
@@ -77,6 +87,7 @@ export class AuthController {
           id: user.id,
           name: user.name,
           is_admin: user.is_admin,
+          status: user.status,
         },
         token: token,
       });
@@ -87,6 +98,7 @@ export class AuthController {
       });
     }
   };
+
   static validateToken = async (req, res) => {
     const id = req.id;
     const name = req.name;

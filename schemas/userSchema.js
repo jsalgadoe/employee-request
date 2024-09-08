@@ -10,10 +10,7 @@ export const userSchema = Yup.object().shape({
     .min(6, "El password debe tener al menos 6 caracteres")
     .required("El password es obligatorio"),
   is_admin: Yup.boolean().default(false),
-  identification: Yup.string()
-    .required("El numero de identification es obligatorio")
-    .min(6, "Numero de identificación debe tener minimo 6 caracteres")
-    .max(10, "Numero de identificación debe tener maximo 10 caracteres"),
+  status: Yup.boolean().default(false),
 });
 
 export const userLoginSchema = Yup.object().shape({
