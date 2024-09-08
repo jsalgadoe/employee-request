@@ -1,29 +1,39 @@
-import { query } from "./db.js";
+import { prisma } from "../lib/prisma.js";
 export class EmployeeModel {
   static async findAll(search_term = "", page_number = 1, page_size = 10) {
     const offset = (page_number - 1) * page_size;
 
     //** TODO PENDIENTE SEARCH_TERM */
     try {
-      const results = await query(
-        `SELECT * FROM employees 
-         WHERE full_name ILIKE $1
-         ORDER BY id LIMIT $2 OFFSET $3`,
-        [`%${search_term}%`, page_size, offset]
-      );
+      const results = await prisma.employee.findMany({
+        skip: Number(offset),
+        take: Number(page_size),
+        where: {
+          full_name: {
+            contains: search_term,
+          },
+        },
+        orderBy: {
+          id: "desc",
+        },
+      });
 
-      const totalResults = await query(
-        `SELECT COUNT(*) FROM employees
-         WHERE full_name ILIKE $1`,
-        [`%${search_term}%`]
-      );
+      const totalResults = await prisma.employee.count({
+        where: {
+          full_name: {
+            contains: search_term,
+          },
+        },
+      });
 
-      const total_pages = Math.ceil(totalResults.rows[0].count / page_size);
+      console.log(totalResults / page_size);
+
+      const total_pages = Math.ceil(totalResults / page_size);
 
       return {
         current_page: parseInt(page_number),
         total_pages: total_pages,
-        total_results: totalResults.rows[0].count,
+        total_results: totalResults,
         page_size: parseInt(page_size),
         has_next_page: page_number < total_pages,
         has_previous_page: page_number > 1,
@@ -35,5 +45,21 @@ export class EmployeeModel {
     }
   }
 
-  static async registerEmployee() {}
+  static async registerEmployee({ hire_date, full_name, salary }) {
+    const user = await prisma.employee.create({
+      data: {
+        hire_date: new Date(hire_date).toISOString(),
+        full_name,
+        salary,
+      },
+      select: {
+        id: true,
+        hire_date: true,
+        full_name: true,
+        salary: true,
+      },
+    });
+
+    return user;
+  }
 }

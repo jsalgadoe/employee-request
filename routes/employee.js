@@ -1,7 +1,9 @@
 import { Router } from "express";
+import { check } from "express-validator";
+
 import { EmployeeController } from "../controllers/v1/empleados/employee.controller.js";
 import { validarJWT } from "../middlewares/validar-jwt.js";
-import { check } from "express-validator";
+import { validarCampos } from "../middlewares/validar-campos.js";
 
 export const employeeRouter = Router();
 employeeRouter.use(validarJWT);
@@ -20,16 +22,16 @@ employeeRouter.post(
     check("hire_date")
       .isDate()
       .withMessage("La fecha de ingreso es obligatoria"),
-    check("identification", "El identification debe ser minimo de 6 caracteres")
-      .isLength({
-        min: 6,
+    check("salary")
+      .isNumeric("El salario es requerido")
+      .custom((value) => {
+        if (value <= 0) {
+          throw new Error("El número debe ser mayor a 0");
+        }
+        return true;
       })
-      .withMessage("La identificación debe ser minima de 6 caracteres")
-      .isLength({
-        max: 10,
-      })
-      .withMessage("La identificacion debe ser maxima 10 caracteres"),
-    check("salary").isNumeric(),
+      .withMessage("El Salario debe ser mayor a 0"),
+    validarCampos,
   ],
   EmployeeController.createEmployee
 );

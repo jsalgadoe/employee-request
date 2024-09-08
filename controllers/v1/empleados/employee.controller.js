@@ -1,8 +1,20 @@
 import { EmployeeModel } from "../../../models/employee.js";
+import { employeeSchema } from "../../../schemas/employeeSchema.js";
 
 export class EmployeeController {
   static createEmployee = async (req, res) => {
-    const { hire_date, identification, full_name, salary } = req.body();
+    const validDataRegister = await employeeSchema.validate(req.body, {
+      abortEarly: false,
+    });
+
+    let employee = await EmployeeModel.registerEmployee({
+      ...validDataRegister,
+    });
+
+    return res.status(201).json({
+      ok: true,
+      empleado: employee,
+    });
   };
 
   static listEmployee = async (req, res) => {
