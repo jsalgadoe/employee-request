@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 
 import { authRouter } from "./routes/auth.js";
 import { employeeRouter } from "./routes/employee.js";
+import { requestRouter } from "./routes/request.js";
+
 import { validarJWT } from "./middlewares/validar-jwt.js";
 import { verificarAdmin } from "./middlewares/verificar_admin.js";
 const app = express();
@@ -17,6 +19,7 @@ app.use(express.json());
 
 app.use("/api/v1/auth/", authRouter);
 app.use("/api/v1/employee", employeeRouter);
+app.use("/api/v1/request", requestRouter);
 
 // app.get("/admin", [validarJWT, verificarAdmin], (req, res) => {
 //   res.json({

@@ -3,18 +3,22 @@ import { employeeSchema } from "../../../schemas/employeeSchema.js";
 
 export class EmployeeController {
   static createEmployee = async (req, res) => {
-    const validDataRegister = await employeeSchema.validate(req.body, {
-      abortEarly: false,
-    });
+    try {
+      const validDataRegister = await employeeSchema.validate(req.body, {
+        abortEarly: false,
+      });
 
-    let employee = await EmployeeModel.registerEmployee({
-      ...validDataRegister,
-    });
+      let employee = await EmployeeModel.registerEmployee({
+        ...validDataRegister,
+      });
 
-    return res.status(201).json({
-      ok: true,
-      empleado: employee,
-    });
+      return res.status(201).json({
+        ok: true,
+        empleado: employee,
+      });
+    } catch (err) {
+      res.status(400).json({ errors: err.errors });
+    }
   };
 
   static listEmployee = async (req, res) => {
@@ -35,8 +39,8 @@ export class EmployeeController {
         ok: true,
         pagination,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      res.status(400).json({ errors: err.errors });
     }
   };
 }

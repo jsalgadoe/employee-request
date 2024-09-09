@@ -37,7 +37,7 @@ export class EmployeeModel {
         page_size: parseInt(page_size),
         has_next_page: page_number < total_pages,
         has_previous_page: page_number > 1,
-        results: results.rows,
+        results: results,
       };
     } catch (err) {
       console.error("Error ejecutando la consulta:", err.stack);
@@ -46,7 +46,7 @@ export class EmployeeModel {
   }
 
   static async registerEmployee({ hire_date, full_name, salary }) {
-    const user = await prisma.employee.create({
+    const employee = await prisma.employee.create({
       data: {
         hire_date: new Date(hire_date).toISOString(),
         full_name,
@@ -60,6 +60,6 @@ export class EmployeeModel {
       },
     });
 
-    return user;
+    return employee;
   }
 }

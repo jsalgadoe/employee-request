@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-import { EmployeeController } from "../controllers/v1/empleados/employee.controller.js";
+import { EmployeeController } from "../controllers/v1/employee/employee.controller.js";
 import { validarJWT } from "../middlewares/validar-jwt.js";
 import { validarCampos } from "../middlewares/validar-campos.js";
 
