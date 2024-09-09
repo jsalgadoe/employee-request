@@ -50,4 +50,27 @@ export class UserModel {
       console.error("Error ejecutando la consulta:", err.stack);
     }
   }
+
+  static async findByUserId(id) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: Number(id),
+        },
+        select: {
+          name: true,
+          id: true,
+          status: true,
+          is_admin: true,
+        },
+      });
+
+      if (!user) return null;
+
+      return user;
+    } catch (err) {
+      console.error("Error ejecutando la consulta:", err.stack);
+      throw err;
+    }
+  }
 }

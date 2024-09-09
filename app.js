@@ -1,6 +1,6 @@
 import express, { json } from "express";
 import dotenv from "dotenv";
-
+import cors from "cors";
 import { authRouter } from "./routes/auth.js";
 import { employeeRouter } from "./routes/employee.js";
 import { requestRouter } from "./routes/request.js";
@@ -13,6 +13,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 12345;
 
+app.use(cors());
 app.disable("x-powered-by");
 
 app.use(express.json());

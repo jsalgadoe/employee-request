@@ -105,10 +105,13 @@ export class AuthController {
     const is_admin = req.is_admin;
     //
 
-    const token = await generarJwt(id, name, is_admin);
+    const user = await UserModel.findByUserId(id);
+
+    const token = await generarJwt(user.id, user.name, user.is_admin);
 
     res.json({
       ok: true,
+      user,
       token: token,
     });
   };
