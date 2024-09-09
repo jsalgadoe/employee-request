@@ -7,8 +7,17 @@ export class EmployeeController {
       const validDataRegister = await employeeSchema.validate(req.body, {
         abortEarly: false,
       });
+      let employee = await EmployeeModel.findOne(
+        validDataRegister.identification
+      );
 
-      let employee = await EmployeeModel.registerEmployee({
+      if (employee) {
+        return res.status(400).json({
+          ok: false,
+          msg: "El empleado ya existe",
+        });
+      }
+      employee = await EmployeeModel.registerEmployee({
         ...validDataRegister,
       });
 

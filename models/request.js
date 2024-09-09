@@ -95,12 +95,40 @@ export class RequestModel {
       console.error("Error ejecutando la consulta:", err.stack);
     }
   }
-  static async findOne(code) {
+  static async findOneByCode(code) {
     try {
       const request = await prisma.request.findUnique({
         where: { code: code },
       });
+      if (!request.length) return null;
       return request;
+    } catch (err) {
+      console.error("Error ejecutando la consulta:", err.stack);
+    }
+  }
+
+  static async findOneById(id) {
+    console.log(id);
+    try {
+      const request = await prisma.request.findMany({
+        where: { id: Number(id) },
+      });
+      if (!request.length) return null;
+      return request;
+    } catch (err) {
+      console.error("Error ejecutando la consulta:", err.stack);
+    }
+  }
+
+  static async destroyRequest(id) {
+    try {
+      const deletedRequest = await prisma.request.delete({
+        where: {
+          id: Number(id), // Asegúrate de convertir el ID a número si viene como string
+        },
+      });
+
+      return deletedRequest;
     } catch (err) {
       console.error("Error ejecutando la consulta:", err.stack);
     }

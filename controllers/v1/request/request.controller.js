@@ -31,7 +31,7 @@ export class RequestController {
         abortEarly: false,
       });
 
-      let request = await RequestModel.findOne(validDataRegister.code);
+      let request = await RequestModel.findOneByCode(validDataRegister.code);
 
       if (request) {
         return res.status(400).json({
@@ -49,8 +49,22 @@ export class RequestController {
   };
 
   static deleteRequest = async (req, res) => {
-    return res.status(200).json({
-      message: "borrar",
+    const id = req.params.id;
+
+    let request = await RequestModel.findOneById(id);
+
+    if (request) {
+      request = await RequestModel.destroyRequest(id);
+
+      return res.status(200).json({
+        ok: true,
+        msg: `La solicitud con el id ${id} fue eliminada con exito`,
+      });
+    }
+
+    return res.status(400).json({
+      ok: false,
+      msg: "Hubo un error al eliminar la solicitud o ya no existe.",
     });
   };
 }

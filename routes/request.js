@@ -2,7 +2,7 @@ import { Router } from "express";
 import { RequestController } from "../controllers/v1/request/request.controller.js";
 import { validarJWT } from "../middlewares/validar-jwt.js";
 import { validarCampos } from "../middlewares/validar-campos.js";
-import { query, check } from "express-validator";
+import { query, check, param } from "express-validator";
 
 export const requestRouter = Router();
 
@@ -66,4 +66,15 @@ requestRouter.post(
   ],
   RequestController.createRequest
 );
-requestRouter.delete("/eliminar-solicitud", RequestController.deleteRequest);
+requestRouter.delete(
+  "/eliminar-solicitud/:id",
+  [
+    param("id")
+      .trim()
+      .escape()
+      .isInt({ min: 1 })
+      .withMessage("El identificador del empleado debe ser un entero positivo"),
+    validarCampos,
+  ],
+  RequestController.deleteRequest
+);

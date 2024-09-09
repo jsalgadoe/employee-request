@@ -24,11 +24,12 @@ model User {
 }
 
 model Employee {
-  id        Int       @id @default(autoincrement())
-  hire_date DateTime
-  full_name String
-  salary    Decimal   @db.Decimal(10, 2)
-  requests  Request[]
+  id             Int       @id @default(autoincrement())
+  identification Int       @unique
+  hire_date      DateTime
+  full_name      String
+  salary         Decimal   @db.Decimal(10, 2)
+  requests       Request[]
 
   @@map("employees")
 }

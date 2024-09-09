@@ -11,15 +11,20 @@ authRouter.post(
   "/login",
   [
     check("name")
-      .not()
-      .isEmpty()
+      .trim()
+      .escape()
+      .notEmpty()
       .withMessage("El usuario es obligatorio")
       .isString()
+      .withMessage("El usuario debe ser una cadena")
       .isLength({ min: 4 })
-      .withMessage("El usuario debe ser minimo de 4 caracteres"),
-    check("password", "El password debe ser minimo de 6 caracteres").isLength({
-      min: 6,
-    }),
+      .withMessage("El usuario debe tener al menos 4 caracteres"),
+
+    check("password")
+      .trim()
+      .escape()
+      .isLength({ min: 6 })
+      .withMessage("La contraseña debe tener al menos 6 caracteres"),
     validarCampos,
   ],
   AuthController.login
@@ -28,15 +33,21 @@ authRouter.post(
   "/register",
   [
     check("name")
-      .not()
-      .isEmpty()
+      .trim()
+      .escape()
+      .notEmpty()
       .withMessage("El usuario es obligatorio")
       .isString()
+      .withMessage("El usuario debe ser una cadena")
       .isLength({ min: 4 })
-      .withMessage("El usuario debe ser minimo de 4 caracteres"),
-    check("password", "El password debe ser minimo de 6 caracteres").isLength({
-      min: 6,
-    }),
+      .withMessage("El usuario debe tener al menos 4 caracteres"),
+
+    check("password")
+      .trim()
+      .escape()
+      .isLength({ min: 6 })
+      .withMessage("La contraseña debe tener al menos 6 caracteres"),
+
     validarCampos,
   ],
   AuthController.register

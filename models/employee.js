@@ -11,6 +11,7 @@ export class EmployeeModel {
         where: {
           full_name: {
             contains: search_term,
+            mode: "insensitive",
           },
         },
         orderBy: {
@@ -22,6 +23,7 @@ export class EmployeeModel {
         where: {
           full_name: {
             contains: search_term,
+            mode: "insensitive",
           },
         },
       });
@@ -45,21 +47,42 @@ export class EmployeeModel {
     }
   }
 
-  static async registerEmployee({ hire_date, full_name, salary }) {
+  static async registerEmployee({
+    hire_date,
+    full_name,
+    salary,
+    identification,
+  }) {
     const employee = await prisma.employee.create({
       data: {
         hire_date: new Date(hire_date).toISOString(),
         full_name,
         salary,
+        identification: identification,
       },
       select: {
         id: true,
         hire_date: true,
         full_name: true,
+        identification: true,
         salary: true,
       },
     });
 
     return employee;
+  }
+
+  static async findOne(identification) {
+    try {
+      const employee = await prisma.employee.findUnique({
+        where: { identification: identification },
+      });
+      if (!employee) {
+        return null;
+      }
+      return employee;
+    } catch (err) {
+      console.error("Error ejecutando la consulta:", err.stack);
+    }
   }
 }
