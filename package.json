@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch app.js",
+    "prisma:migrate": "npx prisma migrate deploy",
+    "install:deps": "npm install",
+    "start": "npm run install:deps && npm run prisma:migrate && node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
